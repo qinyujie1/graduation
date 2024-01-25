@@ -7,6 +7,8 @@ class User(models.Model):
     name = models.CharField(verbose_name="用户名",max_length=20)
     password = models.CharField(verbose_name="密码",validators=[MinLengthValidator(6)], max_length=20)
     role = models.CharField(verbose_name="角色",max_length=6)
+    class Meta:
+        app_label = '用户类'
 class ClothList(models.Model):
     name = models.CharField(verbose_name="服装名字",max_length=50)
     type = models.CharField(verbose_name="服装类型",max_length=20)
