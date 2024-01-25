@@ -3,7 +3,7 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from backend.account.models import User, ClothList, MyLove
+from ..account.models import User, ClothList, MyLove
 
 # Create your views here.
 
