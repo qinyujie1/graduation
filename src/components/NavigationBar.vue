@@ -16,10 +16,9 @@ export default {
   },
 
   setup() {
-    const userName=localStorage.getItem('userName');
+    const userName = localStorage.getItem('userName');
     return {userName};
   },
-
 
 
   created() {
@@ -41,7 +40,7 @@ export default {
         "fixed": "false",
         "vertical": "top",
         "horizontal": "left",
-        "key": "d184dbb323d449eb8322027e7fd0728d"
+        "key": "48aa72181f6f41fba5679ab97dba9a65"
       }
     };
     var script = document.createElement('script');
