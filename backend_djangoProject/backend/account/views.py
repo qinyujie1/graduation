@@ -38,8 +38,6 @@ def register(request):
     name = data.get("name")
     if not name:  # 检查'name'字段是否存在或为空
         return JsonResponse({"message": "用户名不能为空"})
-
-
     password = data.get("password")
     role = data.get("role")
 
@@ -51,9 +49,7 @@ def register(request):
 
 #首页
 def index(request):
-    #左边导航栏
-    #顶部导航栏
-    #右边主体页面可视化
+
     return JsonResponse({})
 
 #服装列表
