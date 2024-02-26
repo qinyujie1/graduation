@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'close',  # 数据库名称
+        'NAME': 'taobao',  # 数据库名称
         'USER': 'root',  # 用户名
         'PASSWORD': '123456',  # 密码
         'HOST': 'localhost',
