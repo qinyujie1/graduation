@@ -131,7 +131,7 @@ export default {
     });
 
 
-    const changeHeartColor = (item: { isHeartSelected: boolean; heartImage: any; name: string; type: any; detail: any; img: any; }) => {
+    const changeHeartColor = (item: { isHeartSelected: boolean; heartImage: any; name: string; type: any; img: any; real_sales: any; procity: any; applicable_age: any; fabric: any; season: any; price: any;}) => {
 
       if (item.isHeartSelected) {
         // 取消发送
@@ -141,9 +141,14 @@ export default {
           data: {
             name: item.name,
             type: item.type,
-            detail: item.detail,
             img: item.img,
             isLiked: "false",
+            real_sales: item.real_sales,
+            procity: item.procity,
+            applicable_age: item.applicable_age,
+            fabric: item.fabric,
+            season: item.season,
+            price: item.price
           }
         })
             .then(response => {
@@ -175,9 +180,14 @@ export default {
         axios.post('http://127.0.0.1:8000/api/mylove/', {
           name: item.name,
           type: item.type,
-          detail: item.detail,
           img: item.img,
           isLiked: "true",
+          real_sales: item.real_sales,
+          procity: item.procity,
+          applicable_age: item.applicable_age,
+          fabric: item.fabric,
+          season: item.season,
+          price: item.price
         })
             .then(response => {
               // 处理成功响应

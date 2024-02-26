@@ -69,13 +69,49 @@ export default defineComponent({
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="详情" prop="detail" :align="'center'">
+      <el-table-column label="购买人数" prop="real_sales" :align="'center'">
         <template #header="{column}">
           <div style="text-align: center;font-size: 17px;color: #333333;">
             {{ column.label }}
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="生产地" prop="procity" :align="'center'">
+          <template #header="{column}">
+            <div style="text-align: center;font-size: 17px;color: #333333;">
+              {{ column.label }}
+            </div>
+          </template>
+        </el-table-column>
+      <el-table-column label="适用年龄" prop="applicable_age" :align="'center'">
+          <template #header="{column}">
+            <div style="text-align: center;font-size: 17px;color: #333333;">
+              {{ column.label }}
+            </div>
+          </template>
+        </el-table-column>
+      <el-table-column label="面料" prop="fabric" :align="'center'">
+          <template #header="{column}">
+            <div style="text-align: center;font-size: 17px;color: #333333;">
+              {{ column.label }}
+            </div>
+          </template>
+        </el-table-column>
+      <el-table-column label="适用季节" prop="season" :align="'center'">
+          <template #header="{column}">
+            <div style="text-align: center;font-size: 17px;color: #333333;">
+              {{ column.label }}
+            </div>
+          </template>
+        </el-table-column>
+      <el-table-column label="价格" prop="price" :align="'center'">
+          <template #header="{column}">
+            <div style="text-align: center;font-size: 17px;color: #333333;">
+              {{ column.label }}
+            </div>
+          </template>
+        </el-table-column>
+
       <el-table-column label="图片" prop="img" class="column" :align="'center'">
         <template #header="{column}">
           <div style="text-align: center;font-size: 17px;color: #333333;">
