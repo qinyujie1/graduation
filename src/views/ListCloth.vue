@@ -3,21 +3,23 @@
 
   <div class="card-container">
     <div v-for="item in displayedData" :key="item.id" class="card-wrapper">
-      <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
-        <img :src="item.img" class="image"/>
-        <div class="column" style="padding: 14px">
-          <span class="costume-name">{{ item.name }}</span>
-          <span class="black-love">
+      <el-link href="/detail?id=' +item.id'">
+        <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
+          <img :src="item.img" class="image"/>
+          <div class="column" style="padding: 14px">
+            <span class="costume-name">{{ item.name }}</span>
+            <span class="black-love">
             <img :src="item.heartImage" @click="changeHeartColor(item)">
           </span>
-          <div class="bottom card-header">
-            <el-button text class="button">{{ item.type }}</el-button>
+            <div class="bottom card-header">
+              <el-button text class="button">{{ item.type }}</el-button>
+            </div>
           </div>
-        </div>
-      </el-card>
+        </el-card>
+      </el-link>
     </div>
   </div>
-<!--分页-->
+  <!--分页-->
   <div class="pagination-container">
     <div class="pagination-wrapper">
       <el-button size="mini" @click="goToPage(1)" :disabled="currentPage === 1">首页</el-button>
@@ -116,8 +118,6 @@ export default {
     });
 
 
-
-
     const pageSize = 8; // 每页显示的数量
 
     const pageCount = computed(() => {
@@ -131,7 +131,19 @@ export default {
     });
 
 
-    const changeHeartColor = (item: { isHeartSelected: boolean; heartImage: any; name: string; type: any; img: any; real_sales: any; procity: any; applicable_age: any; fabric: any; season: any; price: any;}) => {
+    const changeHeartColor = (item: {
+      isHeartSelected: boolean;
+      heartImage: any;
+      name: string;
+      type: any;
+      img: any;
+      real_sales: any;
+      procity: any;
+      applicable_age: any;
+      fabric: any;
+      season: any;
+      price: any;
+    }) => {
 
       if (item.isHeartSelected) {
         // 取消发送
