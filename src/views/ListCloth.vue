@@ -3,7 +3,7 @@
 
   <div class="card-container">
     <div v-for="item in displayedData" :key="item.id" class="card-wrapper">
-      <el-link href="/detail?id=' +item.id'">
+      <el-link :href="'/detail?nid=' + item.id">
         <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
           <img :src="item.img" class="image"/>
           <div class="column" style="padding: 14px">
