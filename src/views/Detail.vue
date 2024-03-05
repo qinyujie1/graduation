@@ -72,8 +72,8 @@ export default defineComponent({
 
 .data {
   position: absolute;
-  top: 100px;
-  left: 300px;
+  top: 40px;
+  right: 40px;
 }
 
 .product-list {
@@ -85,7 +85,7 @@ export default defineComponent({
 }
 
 .product-item {
-  width: 600px;
+  width: 400px;
   margin: 20px;
   padding: 20px;
   border-radius: 10px;

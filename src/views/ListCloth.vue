@@ -3,20 +3,21 @@
 
   <div class="card-container">
     <div v-for="item in displayedData" :key="item.id" class="card-wrapper">
-      <el-link :href="'/detail?nid=' + item.id">
+      <router-link :to="'/detail?nid=' + item.id">
         <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
           <img :src="item.img" class="image"/>
           <div class="column" style="padding: 14px">
             <span class="costume-name">{{ item.name }}</span>
             <span class="black-love">
-            <img :src="item.heartImage" @click="changeHeartColor(item)">
-          </span>
+              <img :src="item.heartImage" @click="changeHeartColor(item)">
+            </span>
             <div class="bottom card-header">
-              <el-button text class="button">{{ item.type }}</el-button>
+              <el-button type="text" class="button">{{ item.type }}</el-button>
+              <el-button type="text" class="button">{{item.real_sales}}</el-button>
             </div>
           </div>
         </el-card>
-      </el-link>
+      </router-link>
     </div>
   </div>
   <!--分页-->
@@ -262,7 +263,7 @@ export default {
 
 
 <style scoped>
-.card-container[data-v-041d4952] {
+.card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -272,12 +273,11 @@ export default {
 }
 
 .card-wrapper {
-
   padding: 10px;
 }
 
 .image {
-  width: 200px;
+  width: 220px;
   height: 250px;
 }
 
@@ -301,7 +301,7 @@ export default {
 
 .costume-name {
   display: inline-block;
-  max-width: 100px; /* 调整合适的宽度 */
+  max-width: 100px; /* Adjust the appropriate width */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

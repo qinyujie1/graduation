@@ -46,7 +46,7 @@
 
         <!--春夏秋冬-->
         <div class="reason">
-          <div id="myEcharts" :style="{ width: '1000px', height: '300px',left:'-130px',position:'absolute' }"></div>
+          <img src="../assets/img/小丑女.png" width="200px"></img>
         </div>
 
 
@@ -73,44 +73,6 @@ export default {
   name: 'Index',
   components: {NavigationBar},
 
-  setup() {
-    const renderChart = (): void => {
-      const chartContainer = document.getElementById('myEcharts');
-      const chart = echarts.init(chartContainer);
-
-      const data = [120, 200, 150, 80, 70]; // 假设这是你的条形图数据
-
-      const option = {
-        title: {
-          text: '某个分类服装销售情况', // 修改为适合你的标题
-        },
-        xAxis: {
-          type: 'category',
-          data: ['A', 'B', 'C', 'D', 'E'], // 修改为适合你的分类数据
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: '{value} 个', // 在标签末尾添加 "个" 单位
-          },
-        },
-        series: [{
-          type: 'bar',
-          data: data,
-        }],
-      };
-
-      chart.setOption(option);
-
-      onUnmounted(() => {
-        chart.dispose();
-      });
-    };
-
-    onMounted(() => {
-      renderChart();
-    });
-  },
 
 }
 
@@ -118,7 +80,6 @@ export default {
 
 
 <style scoped>
-
 
 .el-main {
   background-color: #e9edf1;
