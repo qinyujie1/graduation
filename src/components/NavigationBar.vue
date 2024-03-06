@@ -71,14 +71,20 @@ export default {
           </h5>
         </router-link>
         <el-menu active-text-color="#ccc" text-color="#fff" default-active="2" class="el-menu-vertical-demo">
-          <el-menu-item index="1" v-bind:style="{ color: activeIndex === 1 ? 'black' : 'white' }"
-                        @mouseover="activeIndex = 1" @mouseleave="activeIndex = null">
-            <span style="padding-left: 45px" class="font1">服装列表</span>
-          </el-menu-item>
-          <el-menu-item index="2" v-bind:style="{ color: activeIndex === 2 ? 'black' : 'white' }"
-                        @mouseover="activeIndex = 2" @mouseleave="activeIndex = null">
-            <span style="padding-left: 45px" class="font2">我的喜欢</span>
-          </el-menu-item>
+          <router-link to="/list">
+            <el-menu-item index="1" v-bind:style="{ color: activeIndex === 1 ? 'black' : 'white' }"
+                          @mouseover="activeIndex = 1" @mouseleave="activeIndex = null">
+
+              <span style="padding-left: 45px" class="font1">服装列表</span>
+
+            </el-menu-item>
+          </router-link>
+          <router-link to="/mylove">
+            <el-menu-item index="2" v-bind:style="{ color: activeIndex === 2 ? 'black' : 'white' }"
+                          @mouseover="activeIndex = 2" @mouseleave="activeIndex = null">
+              <span style="padding-left: 45px" class="font2">我的喜欢</span>
+            </el-menu-item>
+          </router-link>
           <el-menu-item index="4" v-bind:style="{ color: activeIndex === 4 ? 'black' : 'white' }"
                         @mouseover="activeIndex = 4" @mouseleave="activeIndex = null">
             <span style="padding-left: 35px" class="font3">->待定待定<-</span>
@@ -141,6 +147,7 @@ export default {
   background-repeat: no-repeat; /* 不重复平铺背景图片 */
   background-position: center; /* 图片居中显示 */
   background-attachment: fixed; /* 固定背景图片，不随页面滚动 */
+  border-radius: 20px;
 }
 
 .el-aside .el-menu {
@@ -157,10 +164,11 @@ export default {
   background-repeat: no-repeat; /* 不重复平铺背景图片 */
   background-position: center; /* 图片居中显示 */
   background-attachment: fixed; /* 固定背景图片，不随页面滚动 */
+  border-radius: 50px;
 }
 
 .mb-2 {
-  font-family:"cloth_icon";
+  font-family: "cloth_icon";
   font-size: 22px;
 }
 
@@ -174,7 +182,7 @@ export default {
 }
 
 .font1 {
-  font-family:"cloth_icon1";
+  font-family: "cloth_icon1";
   font-size: 18px;
 }
 
@@ -188,7 +196,7 @@ export default {
 }
 
 .font2 {
-  font-family:"cloth_icon2";
+  font-family: "cloth_icon2";
   font-size: 18px;
 }
 
@@ -200,6 +208,7 @@ export default {
   url("//at.alicdn.com/wf/webfont/h2kiuecLB7qy/x0fgZmDTPiBY.woff") format("woff");
   font-display: swap;
 }
+
 /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: "cloth_icon";
@@ -208,6 +217,7 @@ export default {
   url("//at.alicdn.com/wf/webfont/h2kiuecLB7qy/o5FNP9ZUydfs.woff") format("woff");
   font-display: swap;
 }
+
 .el-container {
   position: relative;
 }

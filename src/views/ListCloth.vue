@@ -276,6 +276,11 @@ export default {
   padding: 10px;
 }
 
+.el-card {
+  border-radius: 40px;
+  border:2px solid darkred;
+}
+
 .image {
   width: 220px;
   height: 250px;
