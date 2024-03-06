@@ -89,8 +89,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'taobao',  # 数据库名称
         'USER': 'root',  # 用户名
-        'PASSWORD': '123456',  # 密码
-        'HOST': 'localhost',
+        'PASSWORD': 'yanilo315.',  # 密码
+        'HOST': '124.222.172.192',
         'PORT': '3306',
     }
 }
