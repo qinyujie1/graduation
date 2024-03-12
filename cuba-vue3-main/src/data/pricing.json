@@ -1,0 +1,68 @@
+{
+    "data": [
+        {
+            "title":"Standard",
+            "id":1,
+            "price":10,
+            "disk":50,
+            "email":50,
+            "band":40,
+            "subdomain":10,
+            "domain":15
+        },
+        {
+            "title": "Buisness",
+            "id":2,
+            "price":10,
+            "disk":50,
+            "email":50,
+            "band":40,
+            "subdomain":10,
+            "domain":15
+        },
+        {
+            "title": "Premium",
+            "id":3,
+            "price":10,
+            "disk":50,
+            "email":50,
+            "band":40,
+            "subdomain":10,
+            "domain":15
+        },
+        {
+            "title":"Author Pack",
+            "id":4,
+            "price":10,
+            "disk":50,
+            "email":50,
+            "band":40,
+            "subdomain":10,
+            "domain":15
+        }
+    ],
+    "data1":
+    [
+        {
+            "title": "Standard",
+            "price": 15,
+            "text": "Loreum Ipsum"
+        },
+        {
+            "title": "Buisness",
+            "price": 25,
+            "text": "Loreum Ipsum"
+        },
+        {
+            "title": "Premium",
+            "price": 35,
+            "text": "Loreum Ipsum"
+        },
+        {
+            "title": "Author extra",
+            "price": 45,
+            "text": "Loreum Ipsum"
+        }
+    ]
+
+}

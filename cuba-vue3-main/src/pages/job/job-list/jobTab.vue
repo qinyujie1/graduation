@@ -1,0 +1,202 @@
+<template>
+      <div class="col-xl-3 xl-40 box-col-12">
+        <div class="md-sidebar">
+          <a class="btn btn-primary email-aside-toggle md-sidebar-toggle" @click="isOpen">Job filter</a>
+          <div class="md-sidebar-aside job-sidebar" :class="open?'open':''">
+            <div class="default-according style-1 faq-accordion job-accordion">
+              <div class="accordion" id="accordionExample">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-start" type="button"  data-bs-target="#collapseOne" :aria-expanded="active?'false':'true'" aria-controls="collapseOne" @click="showOpen">Filter</button>
+                    </h2>
+                  </div>
+                  <div class="collapse " :class="active?'':'show'" id="collapseOne" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="card-body filter-cards-view animate-chk">
+                      <div class="job-filter mb-2">
+                        <div class="faq-form">
+                          <input class="form-control" type="text" placeholder="Search.."><i class="search-icon" data-feather="search"></i>
+                        </div>
+                      </div>
+                      <div class="job-filter">
+                        <div class="faq-form">
+                          <input class="form-control" type="text" placeholder="location.."><i class="search-icon" data-feather="map-pin"></i>
+                        </div>
+                      </div>
+                      <div class="checkbox-animated">
+                        <label class="d-block" for="chk-ani">
+                          <input class="checkbox_animated" id="chk-ani" type="checkbox"> Full-time (8688)
+                        </label>
+                        <label class="d-block" for="chk-ani1">
+                          <input class="checkbox_animated" id="chk-ani1" type="checkbox">Contract (503)
+                        </label>
+                        <label class="d-block" for="chk-ani2">
+                          <input class="checkbox_animated" id="chk-ani2" type="checkbox">Part-time (288)
+                        </label>
+                        <label class="d-block" for="chk-ani3">
+                          <input class="checkbox_animated" id="chk-ani3" type="checkbox">Internship (236)
+                        </label>
+                        <label class="d-block" for="chk-ani4">
+                          <input class="checkbox_animated" id="chk-ani4" type="checkbox">Temporary (146)
+                        </label>
+                        <label class="d-block" for="chk-ani5">
+                          <input class="checkbox_animated" id="chk-ani5" type="checkbox">Commission (25)
+                        </label>
+                      </div>
+                      <button class="btn btn-primary text-center" type="button">Find jobs</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-start collapsed" type="button"  data-bs-target="#collapseTwo" :aria-expanded="active1?'false':'true'" aria-controls="collapseTwo" @click="showOpen1">Location</button>
+                    </h2>
+                  </div>
+                  <div class="collapse" :class="active1?'':'show'" id="collapseTwo" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="card-body animate-chk">
+                      <div class="location-checkbox">
+                        <label class="d-block" for="chk-ani6">
+                          <input class="checkbox_animated" id="chk-ani6" type="checkbox">                          New York<span class="d-block">NY (399)</span>
+                        </label>
+                        <label class="d-block" for="chk-ani7">
+                          <input class="checkbox_animated" id="chk-ani7" type="checkbox">                           San Francisco<span class="d-block">CA (252)</span>
+                        </label>
+                        <label class="d-block mb-0" for="chk-ani8">
+                          <input class="checkbox_animated" id="chk-ani8" type="checkbox">                            Washington<span class="d-block">DC (226)</span>
+                        </label>
+                        <label class="d-block mb-0" for="chk-ani9">
+                          <input class="checkbox_animated" id="chk-ani9" type="checkbox">                           Seattle<span class="d-block">WA (242)</span>
+                        </label>
+                        <label class="d-block mb-0" for="chk-ani10">
+                          <input class="checkbox_animated" id="chk-ani10" type="checkbox">                          Chicago<span class="d-block">IL (187)</span>
+                        </label>
+                      </div>
+                    </div>
+                    <button class="btn btn-block btn-primary text-center" type="button">All Locations</button>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-start collapsed" type="button"  data-bs-target="#collapseThree" :aria-expanded="active2?'false':'true'" aria-controls="collapseThree" @click="showOpen2">Job Title</button>
+                    </h2>
+                  </div>
+                  <div class="collapse" :class="active2?'':'show'" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="card-body animate-chk">
+                      <label class="d-block" for="chk-ani11">
+                        <input class="checkbox_animated" id="chk-ani11" type="checkbox">                          UI/Ux designer(25)
+                      </label>
+                      <label class="d-block" for="chk-ani12">
+                        <input class="checkbox_animated" id="chk-ani12" type="checkbox">                          Graphic designer(10)
+                      </label>
+                      <label class="d-block" for="chk-ani13">
+                        <input class="checkbox_animated" id="chk-ani13" type="checkbox">                          Front end designer(15)
+                      </label>
+                      <label class="d-block" for="chk-ani14">
+                        <input class="checkbox_animated" id="chk-ani14" type="checkbox">                          PHP developer(42)
+                      </label>
+                      <label class="d-block mb-0" for="chk-ani15">
+                        <input class="checkbox_animated" id="chk-ani15" type="checkbox">                         React Developer(5)
+                      </label>
+                    </div>
+                    <button class="btn btn-block btn-primary text-center" type="button">All Job Title</button>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingFour">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-start collapsed" type="button"  data-bs-target="#collapseFour" :aria-expanded="active3?'false':'true'" aria-controls="collapseFour" @click="showOpen3">Industry</button>
+                    </h2>
+                  </div>
+                  <div class="collapse" :class="active3?'':'show'" id="collapseFour" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                    <div class="card-body animate-chk">
+                      <label class="d-block" for="chk-ani16">
+                        <input class="checkbox_animated" id="chk-ani16" type="checkbox">                          Computer Software(14)
+                      </label>
+                      <label class="d-block" for="chk-ani17">
+                        <input class="checkbox_animated" id="chk-ani17" type="checkbox">                          IT Engineer(10)
+                      </label>
+                      <label class="d-block" for="chk-ani18">
+                        <input class="checkbox_animated" id="chk-ani18" type="checkbox">                          Service industry(20)
+                      </label>
+                      <label class="d-block" for="chk-ani19">
+                        <input class="checkbox_animated" id="chk-ani19" type="checkbox">                         Accounting(34)
+                      </label>
+                      <label class="d-block mb-0" for="chk-ani20">
+                        <input class="checkbox_animated" id="chk-ani20" type="checkbox">                          Financial Services(5)
+                      </label>
+                    </div>
+                    <button class="btn btn-block btn-primary text-center" type="button">All Industries</button>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingFive">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link btn-block text-start collapsed" type="button"  data-bs-target="#collapseFive" :aria-expanded="active4?'false':'true'" aria-controls="collapseFive" @click="showOpen4">Specific skills</button>
+                    </h2>
+                  </div>
+                  <div class="collapse" :class="active4?'':'show'" id="collapseFive" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                    <div class="card-body animate-chk">
+                      <label class="d-block" for="chk-ani21">
+                        <input class="checkbox_animated" id="chk-ani21" type="checkbox">                          HTML,scss & sass
+                      </label>
+                      <label class="d-block" for="chk-ani22">
+                        <input class="checkbox_animated" id="chk-ani22" type="checkbox">                          Javascript
+                      </label>
+                      <label class="d-block" for="chk-ani23">
+                        <input class="checkbox_animated" id="chk-ani23" type="checkbox">                          Node.js
+                      </label>
+                      <label class="d-block" for="chk-ani24">
+                        <input class="checkbox_animated" id="chk-ani24" type="checkbox">                          Gulp & Pug
+                      </label>
+                      <label class="d-block mb-0" for="chk-ani25">
+                        <input class="checkbox_animated" id="chk-ani25" type="checkbox">                          Angular.js
+                      </label>
+                    </div>
+                    <button class="btn btn-block btn-primary text-center" type="button">All Skills </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>    
+</template>
+<script>
+// import jobtab2 from "./jobTab2.vue"
+export default {
+    // components:{
+    //     jobtab2
+    // },
+    methods: {
+isOpen() {
+  this.open = !this.open
+},
+showOpen() {
+  this.active = !this.active
+},
+showOpen1() {
+  this.active1 = !this.active1
+},
+showOpen2() {
+  this.active2 = !this.active2
+},
+showOpen3() {
+  this.active3 = !this.active3
+},
+showOpen4() {
+  this.active4 = !this.active4
+},
+},
+data(){
+return{
+ open: false,
+ active:false,
+ active1:false,
+ active2:false,
+active3:false,active4:false
+}
+}
+}
+</script>
