@@ -1,6 +1,11 @@
 <template>
   <navigation-bar></navigation-bar>
-
+  <el-breadcrumb separator="/">
+    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>
+      <a href="/list">服装列表</a>
+    </el-breadcrumb-item>
+  </el-breadcrumb>
   <div class="card-container">
     <div v-for="item in displayedData" :key="item.id" class="card-wrapper">
       <router-link :to="'/detail?nid=' + item.id">
@@ -263,13 +268,18 @@ export default {
 
 
 <style scoped>
+.el-breadcrumb {
+  position: absolute;
+  top: 80px;
+  left: 250px;
+}
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   position: absolute;
   left: 250px;
-  top: 80px;
+  top: 90px;
 }
 
 .card-wrapper {
@@ -278,7 +288,7 @@ export default {
 
 .el-card {
   border-radius: 40px;
-  border:2px solid darkred;
+  border:2px solid #313743;
 }
 
 .image {

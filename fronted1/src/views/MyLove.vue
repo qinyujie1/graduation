@@ -46,7 +46,12 @@ export default defineComponent({
 
 <template>
   <NavigationBar></NavigationBar>
-
+  <el-breadcrumb separator="/">
+    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>
+      <a href="/mylove/">我的喜欢</a>
+    </el-breadcrumb-item>
+  </el-breadcrumb>
   <el-table :data="filterTableData">
       <el-table-column label="ID" prop="id" :align="'center'">
         <template #header="{column}">
@@ -144,9 +149,15 @@ export default defineComponent({
 
 <style scoped>
 
+.el-breadcrumb {
+  position: absolute;
+  top: 85px;
+  left: 250px;
+}
+
 .el-table {
   position: absolute;
-  top: 100px;
+  top: 120px;
   left: 250px;
   width: 900px;
   text-align: center;

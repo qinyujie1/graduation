@@ -7,6 +7,9 @@
 
       <!--        主体-->
       <el-main>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">首页/</el-breadcrumb-item>
+        </el-breadcrumb>
 
 
         <!--模特图+主体-->
