@@ -86,10 +86,12 @@ export default {
               <span style="padding-left: 45px" class="font2">我的喜欢</span>
             </el-menu-item>
           </router-link>
+          <router-link to="/dashboards">
           <el-menu-item index="4" v-bind:style="{ color: activeIndex === 4 ? 'black' : 'white' }"
                         @mouseover="activeIndex = 4" @mouseleave="activeIndex = null">
-            <span style="padding-left: 35px" class="font3">->待定待定<-</span>
+            <span style="padding-left: 55px" class="font3">总览</span>
           </el-menu-item>
+          </router-link>
         </el-menu>
       </el-col>
     </el-row>
@@ -124,11 +126,9 @@ export default {
         </template>
       </el-dropdown>
 
-      <!--头像-->
+      <!--头像.png-->
       <div class="avatar">
-        <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        />
+        <img src="../assets/img/头像.png">
       </div>
     </el-header>
   </el-container>
@@ -172,7 +172,14 @@ export default {
   font-family: "cloth_icon1";
   font-size: 18px;
 }
-
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: "cloth_icon3";
+  font-weight: 400;
+  src: url("//at.alicdn.com/wf/webfont/h2kiuecLB7qy/J8pYtJKbKVw0.woff2") format("woff2"),
+  url("//at.alicdn.com/wf/webfont/h2kiuecLB7qy/nShi6sWndFFc.woff") format("woff");
+  font-display: swap;
+}
 /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: "cloth_icon2";
@@ -184,6 +191,10 @@ export default {
 
 .font2 {
   font-family: "cloth_icon2";
+  font-size: 18px;
+}
+.font3 {
+  font-family: "cloth_icon3";
   font-size: 18px;
 }
 
@@ -244,10 +255,11 @@ export default {
   line-height: 60px;
 }
 
-.avatar {
+.avatar img{
   position: absolute;
   right: 50px;
-  top: 5px;
+  top: 0px;
+  width: 60px;
 }
 
 .el-dropdown {

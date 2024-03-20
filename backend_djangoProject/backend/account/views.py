@@ -1,7 +1,9 @@
 import json
+import re
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from collections import defaultdict
 
 from ..account.models import User, ClothList, MyLove
 
@@ -146,67 +148,7 @@ def mylove(request):
         return JsonResponse({"message": "我不喜欢了~删除成功"})
 
 
-# def recommend(request):
-#     if request.method == 'POST':
-#         user_clothes = MyLove.objects.filter(isLiked=True)
-#         all_clothes = ClothList.objects.all()
-#
-#         # 提取用户喜欢的服装描述信息
-#         user_descriptions = [
-#             f"{cloth.style} {cloth.price} {cloth.real_sales} {cloth.procity} {cloth.applicable_age} {cloth.fabric} {cloth.season}"
-#             for cloth in user_clothes if all([cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric, cloth.season])
-#         ]
-#
-#         # 使用TF-IDF向量化用户喜欢的服装描述信息
-#         tfidf = TfidfVectorizer(stop_words='english')
-#         tfidf_matrix = tfidf.fit_transform(user_descriptions)
-#
-#         # 计算所有服装之间的相似度矩阵
-#         all_descriptions = [
-#             f"{cloth.style} {cloth.price} {cloth.real_sales} {cloth.procity} {cloth.applicable_age} {cloth.fabric} {cloth.season}"
-#             for cloth in all_clothes if all([cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric, cloth.season])
-#         ]
-#         all_tfidf_matrix = tfidf.transform(all_descriptions)
-#         cosine_sim_all = cosine_similarity(all_tfidf_matrix, tfidf_matrix)
-#
-#         recommended_clothes = []
-#         for idx, user_cloth in enumerate(user_clothes):
-#             similar_indices = cosine_sim_all[:, idx].argsort()[::-1]  # 按相似度排序
-#             for i in similar_indices:
-#                 try:
-#                     recommended_clothes.append(all_clothes.get(pk=i))
-#                 except ClothList.DoesNotExist:
-#                     pass
-#
-#         # 去除重复推荐的服装
-#         unique_recommended_clothes = recommended_clothes
-#
-#         # 将推荐的服装转换为字典格式
-#         formatted_recommended_clothes = []
-#         for cloth in unique_recommended_clothes:
-#             formatted_cloth = {
-#                 "item_name": cloth.item_name,
-#                 "style": cloth.style,
-#                 "price": cloth.price,
-#                 "real_sales": cloth.real_sales,
-#                 "pic": cloth.pic,
-#                 "procity": cloth.procity,
-#                 "applicable_age": cloth.applicable_age,
-#                 "fabric": cloth.fabric,
-#                 "season": cloth.season,
-#                 # 添加其他属性，根据需要继续添加
-#             }
-#             formatted_recommended_clothes.append(formatted_cloth)
-#
-#         # 添加总推荐服装数量
-#         total_recommendations = len(formatted_recommended_clothes)
-#         response_data = {
-#             "total_recommendations": total_recommendations,
-#             "recommended_clothes": formatted_recommended_clothes
-#         }
-#         print(2222222)
-#         print(11111111+response_data)
-#         return JsonResponse(response_data, safe=False)
+
 def recommend(request):
     if request.method == 'POST':
         user_clothes = MyLove.objects.filter(isLiked=True)
@@ -263,6 +205,7 @@ def recommend(request):
             cloth_data = {
                 'id': cloth.id,
                 "item_name": cloth.item_name,
+                "pic": cloth.pic,
                 'style': cloth.style,
                 'price': cloth.price,
                 'real_sales': cloth.real_sales,
@@ -279,6 +222,96 @@ def recommend(request):
         recommended_clothes_data = sorted(recommended_clothes_data, key=lambda x: x['average_similarity'], reverse=True)
 
         return JsonResponse(recommended_clothes_data, safe=False)
+
+
+#总览页
+def dashboards(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+
+        # 使用 defaultdict 初始化一个字典，用于存储每种风格的购买人数总和
+        style_sales = defaultdict(int)
+
+        for item in cloth_items:
+            # 提取购买人数中的数字部分
+            sales = re.findall(r'\d+', item.real_sales)
+            if sales:
+                # 将提取的数字部分转换为整数并加入对应风格的购买人数总和中
+                if item.style is not None:
+                    style_sales[item.style] += int(sales[0])
+
+        series_data = []
+        # 按照销售人数降序排序并选择前十个风格
+        sorted_styles = sorted(style_sales.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        # 创建 x 轴数据列表，选择前 10 个风格作为 x 轴数据点
+        x_axis_data = [style for style, _ in sorted_styles]
+
+        # 构建 series_data 列表
+        for style, total_sales in sorted_styles:
+            data_list = []
+            for key in x_axis_data:
+                if key == style:
+                    data_list.append(total_sales)
+                else:
+                    data_list.append(0)
+
+            series_data.append({
+                "name": style,
+                "type": "bar",
+                "stack": "Total",
+                "data": data_list,
+                "label": {
+                    "show": True,  # 显示标签
+                    "position": "top",  # 标签位置
+                    "formatter": "{c}"  # 显示数据值
+                },
+
+            })
+
+        option = {
+            "title": {"text": "Top 10 Clothing Sales by Style"},
+            "xAxis": [{"type": "category", "data": x_axis_data}],
+            "yAxis": [{"type": "value"}],
+            "series": series_data,
+        }
+
+        return JsonResponse(option, safe=False)
+
+#饼图
+def dashboards1(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+
+        # 使用 defaultdict 初始化一个字典，用于统计每种风格的数量
+        style_count = defaultdict(int)
+
+        for item in cloth_items:
+            if item.style is not None:
+                style_count[item.style] += 1
+
+        # 准备饼图所需的数据
+        data = []
+        for style, count in style_count.items():
+            data.append({"name": style, "value": count})
+
+        option = {
+
+            "series": [{
+                "name": "Styles",
+                "type": "pie",
+                "radius": "50%",
+                "data": data,
+                "label": {
+                    "show": True,
+                    "formatter": "{b}: {c} ({d}%)"
+                }
+            }]
+        }
+
+        return JsonResponse(option, safe=False)
+
+
 
 
 

@@ -93,7 +93,11 @@ export default {
   height: 100%;
 
 }
-
+.el-breadcrumb {
+  top: 25px;
+  left: 50px;
+  position: absolute;
+}
 
 .demonstration {
   color: var(--el-text-color-secondary);
