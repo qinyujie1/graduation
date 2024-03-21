@@ -72,10 +72,10 @@ export default {
     const {ctx} = getCurrentInstance()
     // 触发登录方法
     const handleLogin = (formName: string) => {
-      console.log(ctx)
+      console.log(ctx);
       ctx.$refs[formName].validate((valid: boolean) => {
         if (valid) {
-          console.log('submit!')
+          console.log('submit!');
           axios
               .post('http://127.0.0.1:8000/api/login/', {
                 name: ctx.loginUser.name,
@@ -85,34 +85,40 @@ export default {
                 headers: {
                   'Content-Type': 'application/json'
                 }
-              }).
-          then(response => {
-            if (response.data.message === "登录成功") {
-              ElMessage({
-                message: "登陆成功！小主请开始您的购物之旅哟~",
-                type: "success",
-              });
+              })
+              .then(response => {
+                if (response.data.message === "登录成功") {
+                  ElMessage({
+                    message: "登陆成功！小主请开始您的购物之旅哟~",
+                    type: "success",
+                  });
 
-              localStorage.setItem('userName', ctx.loginUser.name);
+                  localStorage.setItem('userName', ctx.loginUser.name);
 
-              router.push({path: "/", query: {name: ctx.loginUser.name}});
-
-
-            } else if (response.data.message == "用户名或密码错误") {
-              ElMessage.error("登陆失败！用户名或密码错误~");
-              console.log(ctx.loginUser.name)
-            }
-          })
-              .catch(function (error) { // 请求失败处理
-                console.log(error);
+                  if (ctx.loginUser.role === 'user') {
+                    router.push({path: '/', query: {name: ctx.loginUser.name}});
+                  } else if (ctx.loginUser.role === 'admin') {
+                    router.push({path: '/admindashboards'});
+                  }
+                } else if (response.data.message === "用户名或密码错误") {
+                  ElMessage.error("登陆失败！用户名或密码错误~");
+                  console.log(ctx.loginUser.name);
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
               });
         } else {
-          console.log('error submit!')
-          return false
+          console.log('error submit!');
+          return false;
         }
-      })
-    }
-    return {handleLogin}
+      });
+    };
+
+    return{
+      handleLogin
+    };
+
   },
 
 }

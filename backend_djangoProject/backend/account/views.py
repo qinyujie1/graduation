@@ -1,9 +1,13 @@
 import json
 import re
 
+from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from collections import defaultdict
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from ..account.models import User, ClothList, MyLove
 
@@ -60,7 +64,7 @@ def index(request):
 
 
 # 服装列表
-def list(request):
+def list1(request):
     if request.method == "GET":
         clothes = ClothList.objects.all()
         data = []
@@ -148,7 +152,6 @@ def mylove(request):
         return JsonResponse({"message": "我不喜欢了~删除成功"})
 
 
-
 def recommend(request):
     if request.method == 'POST':
         user_clothes = MyLove.objects.filter(isLiked=True)
@@ -157,7 +160,8 @@ def recommend(request):
         # 提取用户喜欢的服装特征
         user_features = []
         for cloth in user_clothes:
-            features = [cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric, cloth.season]
+            features = [cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric,
+                        cloth.season]
             feature_desc = " ".join(str(feature) for feature in features if feature)
             if feature_desc:
                 user_features.append(feature_desc)
@@ -175,7 +179,8 @@ def recommend(request):
         # 计算所有服装和用户喜欢的服装之间的相似度
         all_features = []
         for cloth in all_clothes:
-            features = [cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric, cloth.season]
+            features = [cloth.style, cloth.price, cloth.real_sales, cloth.procity, cloth.applicable_age, cloth.fabric,
+                        cloth.season]
             feature_desc = " ".join(str(feature) for feature in features if feature)
             if feature_desc:
                 all_features.append(feature_desc)
@@ -224,7 +229,7 @@ def recommend(request):
         return JsonResponse(recommended_clothes_data, safe=False)
 
 
-#总览页
+# 总览页
 def dashboards(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()
@@ -278,7 +283,8 @@ def dashboards(request):
 
         return JsonResponse(option, safe=False)
 
-#饼图
+
+# 饼图
 def dashboards1(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()
@@ -312,6 +318,149 @@ def dashboards1(request):
         return JsonResponse(option, safe=False)
 
 
+# admin销售地销售人数
+def admin_login_dashbords(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+
+        # 使用 defaultdict 初始化一个字典，用于存储每个地区的购买人数总和
+        procity_sales = defaultdict(int)
+
+        for item in cloth_items:
+            procity = item.procity.split(' ')[0].strip()
+            sales = re.findall(r'\d+', item.real_sales)
+            if sales:
+                procity_sales[procity] += int(sales[0])
+
+        # 构建横坐标和纵坐标数据
+        x_axis_data = list(procity_sales.keys())  # 生产地数据作为横坐标
+        y_axis_data = [procity_sales[procity] for procity in x_axis_data]  # 对应的销售人数作为纵坐标
+
+        # 构建返回给前端的数据结构
+        data = {
+            'xAxis': x_axis_data,
+            'yAxis': y_axis_data,
+            'series': [{
+                'data': y_axis_data,
+                'type': 'bar'
+            }]
+        }
+
+        return JsonResponse(data, safe=False)
+
+
+# admin销售总额
+def admin_login_dashbords1(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+        total_sales = 0
+
+        for item in cloth_items:
+            price = item.price
+            real_sales = re.findall(r'\d+', item.real_sales)
+            real_sales = int(real_sales[0]) if real_sales else 0
+            sales = int(price) * int(real_sales)
+            total_sales += sales
+
+        data = {
+            'total_sales': total_sales
+        }
+
+        return JsonResponse(data, safe=False)
+
+
+# admin销售总人数
+def admin_login_dashbords2(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+        total_sales = 0
+
+        for item in cloth_items:
+            real_sales = re.findall(r'\d+', item.real_sales)
+            real_sales = int(real_sales[0]) if real_sales else 0
+            sales = int(real_sales)
+            total_sales += sales
+
+        data = {
+            'total_people': total_sales
+        }
+
+        return JsonResponse(data, safe=False)
+
+
+# admin服装总数量
+def admin_login_dashbords3(request):
+    if request.method == 'GET':
+        cloth_items = ClothList.objects.all()
+        total_cloth = len(cloth_items)
+
+        data = {
+            'total_people': total_cloth
+        }
+
+        return JsonResponse(data, safe=False)
+
+
+# 用户管理
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def user_manage(request):
+    if request.method == 'GET':
+        users = User.objects.all()
+        users_list = []
+        for user in users:
+            user_dict = {
+                'id': user.id,
+                'name': user.name,
+                'password': user.password,
+                'role': user.role
+            }
+            users_list.append(user_dict)
+        return JsonResponse(users_list, safe=False)
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        name = data.get('name')
+        password = data.get('password')
+        role = data.get('role')
+        new_user = User(name=name, password=password, role=role)
+        new_user.save()
+        return JsonResponse({'message': 'User created successfully'})
+
+
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def user_manage1(request, userId):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        print(data)
+        user = User.objects.get(id=userId)
+
+        # 检查密码字段是否为空
+        if 'password' in data and data['password'] is not None:
+            user.password = data.get('password')
+
+        user.name = data.get('name')
+        user.role = data.get('role')
+        user.save()
+        return JsonResponse({'message': 'User updated successfully'},safe=False)
+
+    elif request.method == 'DELETE':
+        user = User.objects.get(id=userId)
+        user.delete()
+        return JsonResponse({'message': 'User deleted successfully'})
+    elif request.method == 'GET':
+        if request.method == 'GET':
+            try:
+                user = User.objects.get(id=userId)
+                user_data = {
+                    'id': user.id,
+                    'name': user.name,
+                    'role': user.role,
+                    'password': user.password
+                }
+                return JsonResponse(user_data)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'User not found'}, status=404)
 
 
 
