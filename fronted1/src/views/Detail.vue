@@ -6,20 +6,38 @@
 
   <div v-else class="data">
     <ul class="product-list">
-    <li v-for="item in filterTableData" :key="item.id" class="product-item">
-      <el-image :src="item.img" :fit="fit" class="product-image"></el-image>
-      <div class="product-details">
-        <p class="product-name">{{ item.name }}</p>
-        <el-tag type="success">已有{{ item.id }}人购买</el-tag>
-        <el-tag type="info">Price: {{ item.price }}</el-tag>
-        <el-tag type="warning">生产地: {{ item.procity }}</el-tag>
-        <el-tag type="danger">风格: {{ item.style }}</el-tag>
-        <el-tag type="primary">适合年龄: {{ item.applicable_age }}</el-tag>
-        <el-tag type="success">面料: {{ item.fabric }}</el-tag>
-        <el-tag type="info">适合季节: {{ item.season }}</el-tag>
-      </div>
-    </li>
-  </ul>
+      <li v-for="item in filterTableData" :key="item.id" class="product-item">
+        <el-image :src="item.img" :fit="fit" class="product-image"></el-image>
+        <div class="product-details">
+          <p class="product-name">{{ item.name }}</p>
+          <div class="people">已售{{ item.id }}件</div>
+          <div type="info" class="sale">
+            <span class="shoujia1">售价</span>
+            <span class="shoujia2">¥{{ item.price }}</span>
+          </div>
+          <div type="warning" class="sale">
+            <span class="shoujia1">生产地</span>
+            <span style="font-weight: bold;">{{ item.procity }}</span>
+          </div>
+          <div class="sale">
+            <span class="shoujia1">风格</span>
+            <el-tag v-if="item.style" type="danger">{{ item.style }}</el-tag>
+          </div>
+          <div type="primary" class="sale">
+            <span class="shoujia1">适合年龄</span>
+            <span style="font-weight: bold;">{{ item.applicable_age }}</span>
+          </div>
+          <div class="sale">
+            <span class="shoujia1">面料</span>
+            <el-tag type="success">{{ item.fabric }}</el-tag>
+          </div>
+          <div class="sale">
+            <span class="shoujia1">适合季节</span>
+            <el-tag type="info">{{ item.season }}</el-tag>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 
 
@@ -72,8 +90,8 @@ export default defineComponent({
 
 .data {
   position: absolute;
-  top: 40px;
-  right: 40px;
+  top: 80px;
+  left: 250px;
 }
 
 .product-list {
@@ -109,16 +127,39 @@ export default defineComponent({
 
 .product-details {
   text-align: left;
+  position: absolute;
+  left: 500px;
+  width: 480px;
+  top: 70px;
 }
 
 .product-name {
   font-size: 20px;
   font-weight: bold;
+  display: block;
+  margin-bottom: 15px;
 }
 
+.people {
+  position: absolute;
+  right: 0px;
+  color: grey;
+  font-size: 12px;
+}
 
+.shoujia1 {
+  font-size: 15px;
+  color: grey;
+  padding-right: 10px;
+}
 
+.shoujia2 {
+  color: red;
+  font-size: 22px;
+  font-weight: bold;
+}
 
-
-
+.sale {
+  margin: 15px;
+}
 </style>

@@ -1,6 +1,8 @@
 import json
 import re
 
+from django.contrib.auth import logout
+from django.core.paginator import Paginator
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -35,8 +37,10 @@ def login(request):
 
 
 # 退出登录
-def logout(request):
-    return HttpResponse("退出登录")
+def logout1(request):
+    if request.method == "GET":
+        logout(request)
+        return JsonResponse({"message": "您已成功退出登录"})
 
 
 # 注册
@@ -70,7 +74,7 @@ def list1(request):
         data = []
         for item in clothes:
             data.append(
-                {"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
+                {"id":item.id,"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
                  "isLiked": item.isLiked, "procity": item.procity, "applicable_age": item.applicable_age,
                  "fabric": item.fabric, "season": item.season, "price": item.price}
             )
@@ -78,16 +82,40 @@ def list1(request):
     cloth = ClothList.objects.all()
     data = []
     for item in cloth:
-        data.append({"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
+        data.append({"id":item.id,"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
                      "isLiked": item.isLiked, "procity": item.procity, "applicable_age": item.applicable_age,
                      "fabric": item.fabric, "season": item.season, "price": item.price}
                     )
 
     return JsonResponse(data, safe=False)
 
-    # 我的喜欢
+#详情
+# 单个服装详情
+def detail(request, nid):
+    if request.method == "POST":
+        try:
+            cloth = ClothList.objects.get(id=nid)
+            data = {
+                "id": cloth.id,
+                "name": cloth.item_name,
+                "type": cloth.style,
+                "img": cloth.pic,
+                "real_sales": cloth.real_sales,
+                "isLiked": cloth.isLiked,
+                "procity": cloth.procity,
+                "applicable_age": cloth.applicable_age,
+                "fabric": cloth.fabric,
+                "season": cloth.season,
+                "price": cloth.price
+            }
+            return JsonResponse(data)
+        except ClothList.DoesNotExist:
+            return JsonResponse({"error": "Cloth not found"}, status=404)
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
+# 我的喜欢
 def mylove(request):
     if request.method == "GET":
         clothes = MyLove.objects.all()
@@ -229,7 +257,7 @@ def recommend(request):
         return JsonResponse(recommended_clothes_data, safe=False)
 
 
-# 总览页
+# 总览页 销售人数排行前十
 def dashboards(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()
@@ -276,7 +304,11 @@ def dashboards(request):
 
         option = {
             "title": {"text": "Top 10 Clothing Sales by Style"},
-            "xAxis": [{"type": "category", "data": x_axis_data}],
+            "xAxis": [{"type": "category", "data": x_axis_data,
+                       "axisLabel": {
+                           "rotate": 45
+        }
+        }],
             "yAxis": [{"type": "value"}],
             "series": series_data,
         }
@@ -284,7 +316,7 @@ def dashboards(request):
         return JsonResponse(option, safe=False)
 
 
-# 饼图
+# 饼图 每种风格数量
 def dashboards1(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()
@@ -318,7 +350,7 @@ def dashboards1(request):
         return JsonResponse(option, safe=False)
 
 
-# admin销售地销售人数
+# admin生产地销售人数
 def admin_login_dashbords(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()

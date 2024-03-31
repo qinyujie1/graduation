@@ -63,7 +63,7 @@ export default defineComponent({
     const currentUser = ref(null);
 
     const $router = useRouter();
-    const editUser = (userId) => {
+    const editUser = (userId:any) => {
       $router.push({ path: '/edituser', query: { userId } });
     };
      const { editUser: boundEditUser } = toRefs({ editUser });
@@ -85,7 +85,7 @@ export default defineComponent({
     };
 
 
-    const deleteUser = (userId) => {
+    const deleteUser = (userId:any) => {
       axios
           .delete(`http://127.0.0.1:8000/api/usermanage/${userId}/`)
           .then(response => {

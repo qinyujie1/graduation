@@ -3,6 +3,7 @@ import loginForm from "./LoginForm.vue";
 import router from "../router/index";
 import {useRouter} from "vue-router";
 import {RouteLocationNormalizedLoaded} from 'vue-router';
+import axios from "axios";
 
 declare global {
   interface Window {
@@ -54,6 +55,20 @@ export default {
     script.src = "https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0";
     document.getElementsByTagName('head')[0].appendChild(script);
   },
+  methods: {
+    logout() {
+      axios.get('http://127.0.0.1:8000/api/logout/')
+        .then(response => {
+          // 处理退出登录成功的逻辑，例如清除本地存储的用户信息等
+          console.log(response.data);
+          // 重新加载页面或跳转到登录页面
+          router.push({path: '/login'});
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
 
 }
 
@@ -117,11 +132,7 @@ export default {
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-            <el-dropdown-item disabled>Action 4</el-dropdown-item>
-            <el-dropdown-item divided>Action 5</el-dropdown-item>
+            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

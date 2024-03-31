@@ -66,86 +66,80 @@ export default defineComponent({
   <el-table :data="filterTableData">
     <el-table-column label="ID" prop="id" :align="'center'">
       <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
+        <div class="table-header">
           {{ column.label }}
         </div>
       </template>
     </el-table-column>
     <el-table-column label="名字" prop="name" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag type="success" >
+          {{ row.name }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="类型" prop="type" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag type="danger" v-if="row.type" >
+          {{ row.type }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="购买人数" prop="real_sales" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag v-if="row.real_sales" type="info" style="width:78px">
+          {{ row.real_sales }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="生产地" prop="procity" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag type="danger" v-if="row.procity">
+          {{ row.procity }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="适用年龄" prop="applicable_age" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag type="info" v-if="row.applicable_age">
+          {{ row.applicable_age }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="面料" prop="fabric" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag type="danger" v-if="row.fabric">
+          {{ row.fabric }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="适用季节" prop="season" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
+      <template #default="{ row }">
+        <el-tag v-if="row.season" type="warning"  style="width:74px;">
+          {{ row.season }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="价格" prop="price" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
+      <template #default="{ row }">
+        <div class="table-cell-price">
+          ¥{{ row.price }}
         </div>
       </template>
     </el-table-column>
 
     <el-table-column label="图片" prop="img" class="column" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 17px;color: #333333;">
-          {{ column.label }}
+      <template #default="{ row }">
+        <div class="table-cell">
+          <img :src="row.img" alt="Product Image" width="100" height="100"/>
         </div>
-      </template>
-      <template #default="{ row }" :align="'center'">
-        <img :src="row.img" alt="Product Image" width="100" height="100"/>
       </template>
     </el-table-column>
     <el-table-column label="喜欢" prop="isLiked" :align="'center'">
-      <template #header="{column}">
-        <div style="text-align: center;font-size: 15px;font-size: 17px;color: #333333;">
-          {{ column.label }}
-        </div>
-      </template>
       <template #default="{ row }">
-        <img class="redLove" src="../assets/img/红爱心1.png">
+        <div class="table-cell">
+          <img class="redLove" src="../assets/img/红爱心1.png">
+        </div>
       </template>
     </el-table-column>
   </el-table>
@@ -161,60 +155,100 @@ export default defineComponent({
   </router-link>
 </template>
 
-
 <style scoped>
-
 .el-breadcrumb {
   position: absolute;
   top: 85px;
   left: 250px;
+  font-size: 16px;
 }
 
 .el-table {
   position: absolute;
   top: 120px;
   left: 250px;
-  width: 900px;
+  width: 980px;
+  font-size: 12px;
+  color: #333333;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+.el-table th {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.el-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.table-header {
   text-align: center;
   font-size: 14px;
   color: #333333;
 }
 
-.redLove {
-  width: 30px;
-
+.table-cell {
+  text-align: center;
+  font-size: 14px;
+  color: #333333;
 }
 
-.column {
+.table-cell-price {
   text-align: center;
+  font-size: 16px;
+  color: red;
+}
+
+.table-cell-wide {
+  text-align: center;
+  font-size: 14px;
+  color: #333333;
+  width: 82px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.redLove {
+  width: 30px;
 }
 
 .recommend {
   position: fixed;
   bottom: 20px;
   right: 10px;
-  width: 150px;
-  z-index: 2;
-  height: 40px;
+  z-index:999;
 }
 
 .recommend .el-button {
   width: 150px;
   height: 40px;
-  font-size: 15px;
+  font-size: 16px;
   border: 1px solid #313743;
-}
-
-.recommend p {
-  width: 65px;
-  display: inline-block;
+  background-color: #f5f5f5;
 }
 
 .recommend img {
   width: 40px;
   position: absolute;
-  bottom: 0px;
-  right: 0px;
-
+  bottom: 0;
+  right: 0;
 }
+
+
+.table-header {
+    text-align: center;
+    font-size: 12px;
+    color: #333333;
+    font-weight: bold;
+}
+
+
 </style>
+

@@ -10,6 +10,7 @@ class User(models.Model):
 
 
 class ClothList(models.Model):
+    id= models.BigIntegerField(verbose_name="id", primary_key=True)
     item_name = models.CharField(verbose_name="服装名字", max_length=200)
     style = models.CharField(verbose_name="服装类型", max_length=20)
     price = models.CharField(verbose_name="服装价格", max_length=50)

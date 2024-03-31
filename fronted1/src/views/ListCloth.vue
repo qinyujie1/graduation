@@ -9,16 +9,21 @@
   <div class="card-container">
     <div v-for="item in displayedData" :key="item.id" class="card-wrapper">
       <router-link :to="'/detail?nid=' + item.id">
-        <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
+        <el-card :body-style="{ padding: '0px', marginBottom: '1px', height: '350px' }">
           <img :src="item.img" class="image"/>
           <div class="column" style="padding: 14px">
             <span class="costume-name">{{ item.name }}</span>
+            <span class="costume-price">¥{{ item.price }}</span>
             <span class="black-love">
               <img :src="item.heartImage" @click="changeHeartColor(item)">
             </span>
             <div class="bottom card-header">
-              <el-button type="text" class="button">{{ item.type }}</el-button>
-              <el-button type="text" class="button">{{item.real_sales}}</el-button>
+              <el-tag type="warning" v-if="item.type"  class="button">{{ item.type }}</el-tag>
+
+              <el-button type="text" class="button2">{{ item.procity }}</el-button>
+              <el-button type="text" class="button1">{{ item.real_sales }}</el-button>
+              <el-button type="text" class="button3">...</el-button>
+
             </div>
           </div>
         </el-card>
@@ -273,6 +278,7 @@ export default {
   top: 80px;
   left: 250px;
 }
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -288,7 +294,6 @@ export default {
 
 .el-card {
   border-radius: 40px;
-  border:2px solid #313743;
 }
 
 .image {
@@ -316,10 +321,19 @@ export default {
 
 .costume-name {
   display: inline-block;
-  max-width: 100px; /* Adjust the appropriate width */
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 13px;
+}
+
+.costume-price {
+  color: red;
+  max-width: 30px; /* Adjust the appropriate width */
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
 }
 
 .black-love img {
@@ -328,6 +342,36 @@ export default {
   right: 10px;
   top: 2px;
   width: 35px;
+}
+
+.button {
+  position: absolute;
+  left: 17px;
+  bottom: -20px;
+  padding: 2px;
+}
+
+.button2 {
+  position: absolute;
+  right: 36px;
+  bottom: -21px;
+  color: grey;
+  font-size: 12px;
+}
+
+.button1 {
+  position: absolute;
+  right: 2px;
+  bottom: 0px;
+  color: grey;
+  font-size: 12px;
+}
+.button3 {
+  position: absolute;
+  right: 20px;
+  bottom: -21px;
+  color: grey;
+  font-size: 12px;
 }
 
 </style>
