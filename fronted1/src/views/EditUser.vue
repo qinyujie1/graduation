@@ -3,17 +3,24 @@
     <AdminNavigationBar></AdminNavigationBar>
 
     <form @submit.prevent="updateUser" class="main">
-      <label for="username">用户名:</label>
-      <input type="text" id="username" v-model="editUserForm.username">
+      <div class="form-row">
+        <label for="username">用户名:</label>
+        <input type="text" id="username" v-model="editUserForm.username">
+      </div>
 
-      <label for="password">密码:</label>
-      <input type="password" id="password" v-model="editUserForm.password">
+      <div class="form-row">
+        <label for="password">密码:</label>
+        <input type="password" id="password" v-model="editUserForm.password">
+      </div>
 
-      <label for="role">角色:</label>
-      <select id="role" v-model="editUserForm.role">
-        <option label="管理员" value="admin"></option>
-        <option label="用户" value="user"></option>
-      </select>
+      <div class="form-row">
+        <label for="role">角色:</label>
+        <select id="role" v-model="editUserForm.role">
+          <option label="管理员" value="admin"></option>
+          <option label="用户" value="user"></option>
+        </select>
+      </div>
+
       <button type="submit">更新用户信息</button>
     </form>
   </div>
@@ -55,12 +62,10 @@ export default defineComponent({
             ElMessage.success('您已成功更新用户信息！');
             router.push('/usermanage');
           })
-
           .catch(error => {
             console.error('Error:', error);
           });
     };
-
 
     onMounted(() => {
       const userId = $router.currentRoute.value.query.userId;
@@ -76,58 +81,73 @@ export default defineComponent({
           });
     });
 
-
     return {
       editUserForm,
       updateUser
     };
   }
 });
-
-
-function fetchData(userId: import("vue-router").LocationQueryValue | import("vue-router").LocationQueryValue[]) {
-  throw new Error('Function not implemented.');
-}
 </script>
 
 <style scoped>
 .main {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   border: 1px solid #ccc;
   width: 40%;
-  margin-top: 140px;
+  margin-top: 100px;
   margin-left: 440px;
   height: 330px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+  padding: 20px;
+  border-radius: 8px;
+  align-content: space-around;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.main:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 }
 
 label {
-  margin-top: 20px;
+  margin-right: 10px;
+  width: 86px;
 }
 
-input {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 200px;
+input, select {
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 button {
-  margin-top: 10px;
-  padding: 5px 10px;
+  margin-top: 20px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
   background-color: #0056b3;
-}
-
-select{
-  width: 210px;
-  height: 30px;
 }
 </style>

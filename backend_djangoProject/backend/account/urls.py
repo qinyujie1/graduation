@@ -16,7 +16,9 @@ urlpatterns = [
     path("dashboards3/", views.admin_login_dashbords1),  # admin销售总额
     path("dashboards4/", views.admin_login_dashbords2),  # admin销售总人数
     path("dashboards5/", views.admin_login_dashbords3),  # admin服装总数量
-    path("usermanage/", views.user_manage),  # 用户管理
-    path("usermanage/<int:userId>/", views.user_manage1),  # 用户管理
+    path("usermanage/", views.user_manage),  # 用户管理 查看新增
+    path("usermanage/<int:userId>/", views.user_manage1),  # 用户管理 修改删除
+    path("inventory_management/", views.inventory_management),  # 库存管理 查看新增
+    path("inventory_management/<int:clothId>/", views.inventory_management1),  # 库存管理 修改删除
 
 ]

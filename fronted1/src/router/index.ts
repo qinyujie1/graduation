@@ -62,6 +62,22 @@ const routes: Array<RouteRecordRaw> = [
         name: 'EditUser',
         component: () => import('../views/EditUser.vue')
     },
+    {
+        path: '/inventorymanagement',
+        name: 'InventoryManagement',
+        component: () => import('../views/InventoryManagement.vue')
+    },
+    {
+        path: '/createinventory',
+        name: 'CreateInventory',
+        component: () => import('../views/CreateInventory.vue')
+    },
+    {
+        path: '/editinventory',
+        name: 'EditInventory',
+        component: () => import('../views/EditInventory.vue')
+    },
+
 ]
 
 const router = createRouter({

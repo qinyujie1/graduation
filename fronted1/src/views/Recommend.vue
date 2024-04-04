@@ -39,7 +39,7 @@
               <el-tag v-if="item.season" type="success">{{ item.season }}</el-tag>
             </div>
             <div style="margin-bottom: 5px">
-              <span style="font-size: 12px;margin-right: 10px;margin-bottom: 8px;display: block;">
+              <span style="font-size: 12px;margin-80right: 10px;margin-bottom: 8px;display: block;">
                 推荐度
                 <img src="../assets/img/zan.png" style="width: 30px">
               </span>

@@ -86,7 +86,7 @@ export default {
               <span style="padding-left: 45px" class="font2">用户管理</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/dashboards">
+          <router-link to="/inventorymanagement">
           <el-menu-item index="4" v-bind:style="{ color: activeIndex === 4 ? 'black' : 'white' }"
                         @mouseover="activeIndex = 4" @mouseleave="activeIndex = null">
             <span style="padding-left: 45px" class="font3">库存管理</span>

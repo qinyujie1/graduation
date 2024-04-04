@@ -2,7 +2,7 @@ import json
 import re
 
 from django.contrib.auth import logout
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -74,7 +74,8 @@ def list1(request):
         data = []
         for item in clothes:
             data.append(
-                {"id":item.id,"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
+                {"id": item.id, "name": item.item_name, "type": item.style, "img": item.pic,
+                 "real_sales": item.real_sales,
                  "isLiked": item.isLiked, "procity": item.procity, "applicable_age": item.applicable_age,
                  "fabric": item.fabric, "season": item.season, "price": item.price}
             )
@@ -82,14 +83,16 @@ def list1(request):
     cloth = ClothList.objects.all()
     data = []
     for item in cloth:
-        data.append({"id":item.id,"name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
-                     "isLiked": item.isLiked, "procity": item.procity, "applicable_age": item.applicable_age,
-                     "fabric": item.fabric, "season": item.season, "price": item.price}
-                    )
+        data.append(
+            {"id": item.id, "name": item.item_name, "type": item.style, "img": item.pic, "real_sales": item.real_sales,
+             "isLiked": item.isLiked, "procity": item.procity, "applicable_age": item.applicable_age,
+             "fabric": item.fabric, "season": item.season, "price": item.price}
+        )
 
     return JsonResponse(data, safe=False)
 
-#详情
+
+# 详情
 # 单个服装详情
 def detail(request, nid):
     if request.method == "POST":
@@ -303,12 +306,12 @@ def dashboards(request):
             })
 
         option = {
-            "title": {"text": "Top 10 Clothing Sales by Style"},
+            "title": {"text": "购买人数Top10"},
             "xAxis": [{"type": "category", "data": x_axis_data,
                        "axisLabel": {
                            "rotate": 45
-        }
-        }],
+                       }
+                       }],
             "yAxis": [{"type": "value"}],
             "series": series_data,
         }
@@ -375,7 +378,11 @@ def admin_login_dashbords(request):
             'series': [{
                 'data': y_axis_data,
                 'type': 'bar'
-            }]
+            }],
+            'title': {
+                'text': '各生产地销售人数',
+                'subtext': 'Number of sales by production location'
+            },
         }
 
         return JsonResponse(data, safe=False)
@@ -427,7 +434,7 @@ def admin_login_dashbords3(request):
         total_cloth = len(cloth_items)
 
         data = {
-            'total_people': total_cloth
+            'total_cloth': total_cloth
         }
 
         return JsonResponse(data, safe=False)
@@ -474,25 +481,156 @@ def user_manage1(request, userId):
         user.name = data.get('name')
         user.role = data.get('role')
         user.save()
-        return JsonResponse({'message': 'User updated successfully'},safe=False)
+        return JsonResponse({'message': 'User updated successfully'}, safe=False)
 
     elif request.method == 'DELETE':
         user = User.objects.get(id=userId)
         user.delete()
         return JsonResponse({'message': 'User deleted successfully'})
     elif request.method == 'GET':
-        if request.method == 'GET':
-            try:
-                user = User.objects.get(id=userId)
-                user_data = {
-                    'id': user.id,
-                    'name': user.name,
-                    'role': user.role,
-                    'password': user.password
-                }
-                return JsonResponse(user_data)
-            except User.DoesNotExist:
-                return JsonResponse({'error': 'User not found'}, status=404)
+        try:
+            user = User.objects.get(id=userId)
+            user_data = {
+                'id': user.id,
+                'name': user.name,
+                'role': user.role,
+                'password': user.password
+            }
+            return JsonResponse(user_data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
 
 
+# 库存管理
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def inventory_management(request):
+    if request.method == 'GET':
+        clothes = ClothList.objects.all()
 
+        # 分页
+        paginator = Paginator(clothes, 20)  # 每页最多20条数据
+        page = request.GET.get('page')
+        try:
+            cloth_list = paginator.page(page)
+        except PageNotAnInteger:
+            cloth_list = paginator.page(1)
+        except EmptyPage:
+            cloth_list = paginator.page(paginator.num_pages)
+
+        serialized_cloth_list = []
+        for cloth in cloth_list:
+            cloth_dict = {
+                "id": cloth.id,
+                "name": cloth.item_name,
+                "type": cloth.style,
+                "img": cloth.pic,
+                "real_sales": cloth.real_sales,
+                "isLiked": cloth.isLiked,
+                "procity": cloth.procity,
+                "applicable_age": cloth.applicable_age,
+                "fabric": cloth.fabric,
+                "season": cloth.season,
+                "price": cloth.price
+            }
+            serialized_cloth_list.append(cloth_dict)
+
+        return JsonResponse({
+            'results': serialized_cloth_list,
+            'total_pages': paginator.num_pages
+        }, safe=False)
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        id = data.get('id')
+        name = data.get('name')
+        if data.get('type'):
+            type = data.get('type')
+        else:
+            type = None
+        if data.get('img'):
+            img = data.get('img')
+        else:
+            img = 'https://g-search3.alicdn.com/img/bao/uploaded/i4/i1/709048633/O1CN015QjYca2Ddy7uH259j_!!709048633.jpg'
+
+        if data.get('real_sales'):
+            real_sales = data.get('real_sales')
+        else:
+            real_sales = None
+        isLiked = data.get('isLiked')
+        if data.get('procity'):
+            procity = data.get('procity')
+        else:
+            procity = None
+        if data.get('applicable_age'):
+            applicable_age = data.get('applicable_age')
+        else:
+            applicable_age = None
+        if data.get('fabric'):
+            fabric = data.get('fabric')
+        else:
+            fabric = None
+        if data.get('season'):
+            season = data.get('season')
+        else:
+            season = None
+        if data.get('price'):
+            price = data.get('price')
+        else:
+            price = None
+
+        new_cloth = ClothList(id=id, item_name=name, style=type, pic=img, real_sales=real_sales, isLiked=isLiked,
+                              procity=procity, applicable_age=applicable_age,
+                              fabric=fabric, season=season, price=price)
+
+        new_cloth.save()
+        return JsonResponse({'message': 'Cloth created successfully'})
+
+
+@csrf_exempt
+@require_http_methods(["GET", "POST", "PUT", "DELETE"])
+def inventory_management1(request, clothId):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        print(data)
+        cloth = ClothList.objects.get(id=clothId)
+
+        # 检查密码字段是否为空
+        # if 'password' in data and data['password'] is not None:
+        #     user.password = data.get('password')
+
+        cloth.name = data.get('name')
+        cloth.style = data.get('type')
+        cloth.real_sales = data.get('real_sales')
+        cloth.isLiked = data.get('isLiked')
+        cloth.procity = data.get('procity')
+        cloth.applicable_age = data.get('applicable_age')
+        cloth.fabric = data.get('fabric')
+        cloth.season = data.get('season')
+        cloth.price = data.get('price')
+        cloth.save()
+        return JsonResponse({'message': 'Cloth updated successfully'}, safe=False)
+
+    elif request.method == 'DELETE':
+        cloth = ClothList.objects.get(id=clothId)
+        cloth.delete()
+        return JsonResponse({'message': 'Cloth deleted successfully'})
+    elif request.method == 'GET':
+        try:
+            cloth = ClothList.objects.get(id=clothId)
+            cloth_data = {
+                "id": cloth.id,
+                "name": cloth.item_name,
+                "type": cloth.style,
+                "img": cloth.pic,
+                "real_sales": cloth.real_sales,
+                "isLiked": cloth.isLiked,
+                "procity": cloth.procity,
+                "applicable_age": cloth.applicable_age,
+                "fabric": cloth.fabric,
+                "season": cloth.season,
+                "price": cloth.price
+            }
+            return JsonResponse(cloth_data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Cloth not found'}, status=404)
