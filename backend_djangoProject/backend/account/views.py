@@ -229,15 +229,15 @@ def recommend(request):
 
         # 按相似度降序排序推荐服装
         recommended_clothes.sort(key=lambda x: x[1], reverse=True)
-        recommended_clothes = [cloth[0] for cloth in recommended_clothes]
 
-        # 返回推荐的服装数据给前端
-        # 这里可以根据需要将推荐的服装数据格式化后返回给前端
+        # 仅保留推荐度前十的服装数据
+        recommended_clothes = recommended_clothes[:10]
 
-        # 将 ClothList 对象转换为字典，并包含相似度信息和相似度平均值
+        # 返回推荐度前十的服装数据给前端
         recommended_clothes_data = []
-        for cloth, similarity in zip(recommended_clothes, all_user_similarity):
-            average_similarity = sum(similarity) / len(similarity)  # 计算相似度平均值
+        for cloth, similarity in recommended_clothes:
+            similarity = [similarity]  # 将相似度转换为包含单个值的列表
+            average_similarity = similarity[0]  # 取出单个相似度值
             cloth_data = {
                 'id': cloth.id,
                 "item_name": cloth.item_name,
@@ -249,13 +249,10 @@ def recommend(request):
                 'applicable_age': cloth.applicable_age,
                 'fabric': cloth.fabric,
                 'season': cloth.season,
-                'similarity': similarity.tolist(),  # 将相似度转换为列表
+                'similarity': similarity,  # 将相似度转换为列表
                 'average_similarity': average_similarity  # 添加相似度平均值
             }
             recommended_clothes_data.append(cloth_data)
-
-        # 根据相似度平均值对服装数据进行排序
-        recommended_clothes_data = sorted(recommended_clothes_data, key=lambda x: x['average_similarity'], reverse=True)
 
         return JsonResponse(recommended_clothes_data, safe=False)
 
@@ -534,7 +531,6 @@ def inventory_management(request):
                 "price": cloth.price
             }
             serialized_cloth_list.append(cloth_dict)
-
         return JsonResponse({
             'results': serialized_cloth_list,
             'total_pages': paginator.num_pages

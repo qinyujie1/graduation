@@ -32,7 +32,13 @@
             </div>
             <div style="margin-bottom: 5px">
               <span style="font-size: 12px;margin-right: 10px;">面料</span>
-              <el-tag v-if="item.fabric" type="warning">{{ item.fabric }}</el-tag>
+              <el-tag v-if="item.fabric" type="warning" style="margin-top: 7px;
+                white-space: pre-wrap;
+                margin-bottom: 20px;
+                line-height: 20px;
+                height: auto;">
+                {{ item.fabric }}
+              </el-tag>
             </div>
             <div style="margin-bottom: 5px">
               <span style="font-size: 12px;margin-right: 10px;">适合季节</span>

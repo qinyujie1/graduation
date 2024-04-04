@@ -36,7 +36,7 @@ export default defineComponent({
     };
 
     const editUser = (clothId) => {
-       $router.push({ path: '/editinventory', query: { clothId } });
+      $router.push({path: '/editinventory', query: {clothId}});
     };
 
     const handleSizeChange = (val) => {
@@ -148,13 +148,14 @@ export default defineComponent({
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
+        :page-sizes="[20]"
+        :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="totalPages * 10"
-        style="
-        border-radius: 8px;
-        font-size: 15px;"></el-pagination>
+        :total="totalPages"
+        :pager="auto"
+    :page-count="totalPages"
+    style="border-radius: 8px; font-size: 15px;">
+    </el-pagination>
   </div>
 </template>
 
