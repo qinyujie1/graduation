@@ -77,6 +77,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'EditInventory',
         component: () => import('../views/EditInventory.vue')
     },
+    {
+        path: '/bigdashboard',
+        name: 'BigDashboard',
+        component: () => import('../views/BigDashboard.vue')
+    },
 
 ]
 

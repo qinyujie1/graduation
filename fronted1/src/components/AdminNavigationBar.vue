@@ -88,7 +88,7 @@ export default {
           </h5>
         </router-link>
         <el-menu active-text-color="#ccc" text-color="#fff" default-active="2" class="el-menu-vertical-demo">
-          <router-link to="/admindashboards">
+          <router-link to="/bigdashboard">
             <el-menu-item index="1" v-bind:style="{ color: activeIndex === 1 ? 'black' : 'white' }"
                           @mouseover="activeIndex = 1" @mouseleave="activeIndex = null">
 

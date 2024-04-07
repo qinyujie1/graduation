@@ -101,12 +101,6 @@ export default {
               <span style="padding-left: 45px" class="font2">我的喜欢</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/dashboards">
-          <el-menu-item index="4" v-bind:style="{ color: activeIndex === 4 ? 'black' : 'white' }"
-                        @mouseover="activeIndex = 4" @mouseleave="activeIndex = null">
-            <span style="padding-left: 55px" class="font3">总览</span>
-          </el-menu-item>
-          </router-link>
         </el-menu>
       </el-col>
     </el-row>

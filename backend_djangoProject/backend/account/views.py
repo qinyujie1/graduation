@@ -1,15 +1,19 @@
+import base64
 import json
 import re
+from io import BytesIO
 
 from django.contrib.auth import logout
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from matplotlib import pyplot as plt
+from wordcloud import WordCloud
 
 from ..account.models import User, ClothList, MyLove
 
@@ -257,7 +261,8 @@ def recommend(request):
         return JsonResponse(recommended_clothes_data, safe=False)
 
 
-# 总览页 销售人数排行前十
+# 总览页 销售人数排行前五
+
 def dashboards(request):
     if request.method == 'GET':
         cloth_items = ClothList.objects.all()
@@ -274,43 +279,118 @@ def dashboards(request):
                     style_sales[item.style] += int(sales[0])
 
         series_data = []
-        # 按照销售人数降序排序并选择前十个风格
-        sorted_styles = sorted(style_sales.items(), key=lambda x: x[1], reverse=True)[:10]
+        # 按照销售人数降序排序并选择前五个风格
+        sorted_styles = sorted(style_sales.items(), key=lambda x: x[1], reverse=True)[:5]
 
-        # 创建 x 轴数据列表，选择前 10 个风格作为 x 轴数据点
-        x_axis_data = [style for style, _ in sorted_styles]
+        # 创建 y 轴数据列表，选择前 5 个风格作为 y 轴数据点
+        y_axis_data = [style for style, _ in sorted_styles]
+
+        # 获取最大销售人数
+        max_sales = max([total_sales for _, total_sales in sorted_styles])
 
         # 构建 series_data 列表
+        data_list = []
         for style, total_sales in sorted_styles:
-            data_list = []
-            for key in x_axis_data:
+            data = []
+            for key in y_axis_data:
                 if key == style:
-                    data_list.append(total_sales)
+                    data.append(total_sales)
                 else:
-                    data_list.append(0)
+                    data.append(0)
+            data_list.append(data)
 
             series_data.append({
                 "name": style,
                 "type": "bar",
-                "stack": "Total",
-                "data": data_list,
-                "label": {
-                    "show": True,  # 显示标签
-                    "position": "top",  # 标签位置
-                    "formatter": "{c}"  # 显示数据值
+                "barWidth": 10,
+                "barGap": "-70%",
+                "data": data_list[-1],  # 使用最后一个 data_list 中的数据
+                "itemStyle": {
+                    "normal": {
+                        "barBorderRadius": 30,
+                        "color": {
+                            "type": "linear",
+                            "x": 0,
+                            "y": 0,
+                            "x2": 1,
+                            "y2": 0,
+                            "colorStops": [
+                                {
+                                    "offset": 0,
+                                    "color": "rgb(57,89,255,1)"
+                                },
+                                {
+                                    "offset": 1,
+                                    "color": "rgb(46,200,207,1)"
+                                }
+                            ]
+                        }
+                    }
                 },
-
             })
 
         option = {
-            "title": {"text": "购买人数Top10"},
-            "xAxis": [{"type": "category", "data": x_axis_data,
-                       "axisLabel": {
-                           "rotate": 45
-                       }
-                       }],
-            "yAxis": [{"type": "value"}],
+            "backgroundColor": "#003366",
+            "grid": {
+                "left": "2%",
+                "right": "2%",
+                "bottom": "0%",
+                "top": "2%",
+                "containLabel": True,
+            },
+            "tooltip": {
+                "trigger": "axis",
+                "axisPointer": {
+                    "type": "none",
+                },
+                "formatter": "function (params) { return params[0].name + ' : ' + params[0].value; }",
+            },
+            "xAxis": {
+                "show": False,
+                "type": "value",
+            },
+            "yAxis": [
+                {
+                    "type": "category",
+                    "position": "left",  # 将第一个 y 轴设置在左侧
+                    "inverse": True,
+                    "axisLabel": {
+                        "show": True,
+                        "textStyle": {
+                            "color": "#fff",
+                        },
+                    },
+                    "splitLine": {
+                        "show": False,
+                    },
+                    "axisTick": {
+                        "show": False,
+                    },
+                    "axisLine": {
+                        "show": False,
+                    },
+                    "data": y_axis_data,
+                },
+                {
+                    "type": "category",
+                    "position": "insideRight",  # 将第二个 y 轴设置在柱状图内部右侧
+                    "inverse": True,
+                    "axisTick": "none",
+                    "axisLine": "none",
+                    "show": True,
+                    "axisLabel": {
+                        "inside": "true",
+                        "textStyle": {
+                            "color": "#ffffff",
+                            "fontSize": "12",
+                        },
+                        "z": 100,  # 调整标签的层叠顺序，数值越大显示在上层
+                    },
+                    "data": [total_sales for _, total_sales in sorted_styles],
+                },
+            ],
             "series": series_data,
+
         }
 
         return JsonResponse(option, safe=False)
@@ -630,3 +710,193 @@ def inventory_management1(request, clothId):
             return JsonResponse(cloth_data)
         except User.DoesNotExist:
             return JsonResponse({'error': 'Cloth not found'}, status=404)
+
+
+# 服装单价排行前五
+def sale_price(request):
+    all_data = ClothList.objects.all()
+
+    # 从数据库中获取数据并存储到列表中
+    cloth_data = []
+    for data in all_data:
+        price = data.price
+        name = data.item_name
+        cloth_data.append({
+            "name": name,
+            "price": price
+        })
+
+    # 对服装数据按照价格进行排序，取前五个并倒序
+    sorted_data = sorted(cloth_data, key=lambda x: x["price"], reverse=True)[:5][::-1]
+
+    # 构建柱状图数据
+    x_data = [item["name"] for item in sorted_data]
+    y_data = [item["price"] for item in sorted_data]
+
+    option = {
+        "xAxis": {
+            "type": "value",
+            "max": 70000,  # 设置最大值为 70000
+            "axisLabel": {
+                "color": "#fff"
+            }
+        },
+
+        "yAxis": {
+            "type": "category",
+            "data": x_data,
+            "axisLabel": {
+                "color": "#fff"
+            }
+        },
+        "series": [{
+            "data": y_data,
+            "type": "bar",
+            "barWidth": 10,  # 修改柱宽为10
+            "barBorderRadius": 30,
+            "label": {
+                "show": True,
+                "position": "right",
+                "color": "#fff"
+            },
+            "itemStyle": {
+                "color": "#3fdaff"  # 柱状图颜色
+            },
+            "tooltip": {
+                "trigger": "axis",
+                "formatter": "{b}: {c}"
+            },
+
+        }],
+        "grid": {
+            "left": "3%",
+            "right": "4%",
+            "bottom": "3%",
+            "containLabel": True
+        },
+        "backgroundColor": "#031f2d"
+    }
+
+    return JsonResponse(option, safe=False)
+
+def pie1(request):
+    if request.method == 'GET':
+        cloth_items = MyLove.objects.all()
+
+        # 使用 defaultdict 初始化一个字典，用于统计每种风格的数量
+        style_count = defaultdict(int)
+
+        for item in cloth_items:
+            if item.style is not None:
+                style_count[item.style] += 1
+
+        # 准备饼图所需的数据
+        data = []
+        for style, count in style_count.items():
+            data.append({"name": style, "value": count})
+
+        option = {
+
+            "series": [{
+                "name": "Styles",
+                "type": "pie",
+                "radius": "50%",
+                "data": data,
+                "label": {
+                    "show": True,
+                    "formatter": "{b}: {c} ({d}%)"
+                }
+            }]
+        }
+
+        return JsonResponse(option, safe=False)
+
+def pie2(request):
+    if request.method == 'GET':
+        cloth_items = MyLove.objects.all()
+
+        # 使用 defaultdict 初始化一个字典，用于统计每种风格的数量
+        style_count = defaultdict(int)
+
+        for item in cloth_items:
+            if item.style is not None:
+                style_count[item.fabric] += 1
+
+        # 准备饼图所需的数据
+        data = []
+        for style, count in style_count.items():
+            data.append({"name": style, "value": count})
+
+        option = {
+
+            "series": [{
+                "name": "Fabric",
+                "type": "pie",
+                "radius": "50%",
+                "data": data,
+                "label": {
+                    "show": True,
+                    "formatter": "{b}: {c} ({d}%)"
+                }
+            }]
+        }
+
+        return JsonResponse(option, safe=False)
+
+#矩树图
+def age_world(request):
+    if request.method == 'GET':
+        all_data = ClothList.objects.all()
+
+        # 获取所有适用年龄数据，并排除掉None值
+        age_data = [data.applicable_age for data in all_data if data.applicable_age is not None]
+
+        # 统计年龄数据的个数
+        age_counts = Counter(age_data)
+
+        # 将年龄数据个数转换为 echarts 需要的数据格式
+        data = [{'name': str(age), 'value': count} for age, count in age_counts.items()]
+
+        return JsonResponse({'data': data}, safe=False)
+
+
+def unify_season(season_str):
+    if "春" in season_str:
+        return "春"
+    elif "夏" in season_str:
+        return "夏"
+    elif "秋" in season_str:
+        return "秋"
+    elif "冬" in season_str:
+        return "冬"
+    else:
+        return season_str
+
+
+def lei_season(request):
+    all_data = ClothList.objects.all()
+
+    # 过滤掉'season'字段为None且格式不符合预期的数据
+    valid_data = [data for data in all_data if data.season and "年" in data.season]
+
+    season_counts = Counter()
+    for item in valid_data:
+        # 统一季节词汇
+        season = unify_season(item.season)
+
+        # 提取购买人数中的数字部分
+        sales = re.findall(r'\d+', item.real_sales)
+        if sales:
+            # 将提取的数字部分转换为整数并加入对应季节的购买人数总和中
+            sales_number = int(sales[0])
+            if season in season_counts:
+                season_counts[season] += sales_number
+            else:
+                season_counts[season] = sales_number
+
+    data = {
+        'labels': list(season_counts.keys()),
+        'values': list(season_counts.values())
+    }
+
+    return JsonResponse({'data': data}, safe=False)

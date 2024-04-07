@@ -16,6 +16,11 @@ urlpatterns = [
     path("dashboards3/", views.admin_login_dashbords1),  # admin销售总额
     path("dashboards4/", views.admin_login_dashbords2),  # admin销售总人数
     path("dashboards5/", views.admin_login_dashbords3),  # admin服装总数量
+    path("dashboards6/", views.sale_price),  # 服装单价排行
+    path("dashboards7/", views.pie1),  # 我的喜欢服装类型
+    path("dashboards8/", views.pie2),  # 我的喜欢服装面料
+    path("dashboards9/", views.age_world),  # 适合年龄 矩树图
+    path("dashboards10/", views.lei_season),  # 适合季节 雷达图
     path("usermanage/", views.user_manage),  # 用户管理 查看新增
     path("usermanage/<int:userId>/", views.user_manage1),  # 用户管理 修改删除
     path("inventory_management/", views.inventory_management),  # 库存管理 查看新增

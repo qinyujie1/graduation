@@ -7,6 +7,7 @@ import axios from "axios";
 
 export default defineComponent({
   components: {AdminNavigationBar},
+  name:"InventoryManagement",
   setup() {
     const cloth = ref([]);
     const currentPage = ref(1); // 当前页码
